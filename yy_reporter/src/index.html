@@ -1,0 +1,49 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YY REPORTER</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
+    <script type="text/javascript" src="vendor/vue_csp.js"></script>
+</head>
+<body>
+<div class="container" id="app">
+    <nav class="panel">
+        <p class="panel-heading">
+            {{message}}
+        </p>
+        <div class="panel-block">
+            <p class="control has-icons-left">
+                <input class="input is-small" type="text" placeholder="search">
+                <span class="icon is-small is-left">
+        <i class="fa fa-search"></i>
+      </span>
+            </p>
+        </div>
+        <p class="panel-tabs">
+            <a v-for="(index, title) in titleArray" @click="showTitle(index)" v-bind:class="isTitleActive(index)">
+                {{title}}
+            </a>
+        </p>
+        <div id="list">
+            <a v-for="key in webSiteList" class="panel-block" @click="goToWeb()">
+            <span class="panel-icon">
+            <i class="fa fa-book"></i>
+            </span>
+                {{key}}
+            </a>
+        </div>
+        <div class="panel-block">
+            <button @click="clearAll" class="button is-link is-outlined is-fullwidth">
+                清空
+            </button>
+        </div>
+    </nav>
+</div>
+</body>
+</html>
+<!--加上 type="module" 就可以使用es6语法了-->
+<script type="module" src="js/index.js"></script>

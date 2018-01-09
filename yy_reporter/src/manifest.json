@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "my reporter",
+  "version": "1.0",
+  "description": "我的网站统计",
+  "icons": {
+    "16": "img/icon.png",
+    "48": "img/icon.png",
+    "128": "img/icon.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "19": "img/icon.png",
+      "38": "img/icon.png"
+    },
+    "default_title": "yy reporter",
+    "default_popup": "index.html"
+  },
+  "background": {
+    "page": "monitor.html",
+    "persistent": true
+  },
+  "permissions": [
+    "tabs","storage"
+  ]
+}
