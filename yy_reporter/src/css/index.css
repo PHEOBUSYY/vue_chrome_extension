@@ -1,0 +1,47 @@
+.t_right {
+    float: right;
+}
+
+.t_left {
+    float: left;
+}
+
+.w100 {
+    width: 100%;
+}
+
+.w70 {
+    width: 70%;
+}
+
+.h100 {
+    height: 100%;
+}
+
+.margin_l20 {
+    margin-left: 20px;
+}
+
+.margin_r20 {
+    margin-right: 50px;
+}
+
+.text_center {
+    text-align: center;
+}
+
+.text_left {
+    text-align: left;
+}
+
+.text_right {
+    text-align: right;
+}
+
+.test_align {
+    display: inline-block;
+}
+
+.padding5 {
+    padding: 5px;
+}

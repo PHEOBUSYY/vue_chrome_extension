@@ -8,6 +8,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
     <script type="text/javascript" src="vendor/vue_csp.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
 </head>
 <body>
 <div class="container" id="app">
@@ -24,19 +25,35 @@
             </p>
         </div>
         <p class="panel-tabs">
-            <a v-for="(index, title) in titleArray" @click="showTitle(index)" v-bind:class="isTitleActive(index)">
+            <a v-for="(index, title) in titleArray" @click="showTitle(index)"
+               v-bind:class="isTitleActive(index)">
                 {{title}}
             </a>
         </p>
-        <div id="list">
-            <a v-for="key in webSiteList" class="panel-block" @click="goToWeb()">
-            <span class="panel-icon">
-            <i class="fa fa-book"></i>
+        <div v-for="key in webSiteList" v-bind:key="key">
+            <a class="panel-block w100 is-primary" @click="goToWeb(key)" >
+            <span class="icon">
+            <i class="fa fa-id-badge"></i>
             </span>
-                {{key}}
+                <span>{{key}}</span>
             </a>
+            <div class="level">
+                <div class="level_left t_left padding5" @click="forbid(key)">
+                    <a
+                       class="panel-block level_item button is-primary">
+                        <span v-if="this.webCounter[key].isForbid">已禁用</span>
+                        <span v-else>禁用</span>
+                        <span class="icon"><i class="fa fa-id-badge"></i></span></a>
+                </div>
+                <div class="level_right t_right padding5" @click="star(key)">
+                    <a
+                       class="panel-block level_item button is-primary ">
+                        <span v-text="starText(key)"></span> <span class="icon"><i class="fa fa-id-badge"></i></span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="panel-block">
+        <div class="panel-block w100" v-if="currentIndex === 0">
             <button @click="clearAll" class="button is-link is-outlined is-fullwidth">
                 清空
             </button>
