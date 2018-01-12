@@ -6,23 +6,24 @@
       <el-menu-item index="1">常用</el-menu-item>
       <el-menu-item index="2">收藏</el-menu-item>
       <el-menu-item index="3">禁用</el-menu-item>
-      <!--<el-submenu index="4">-->
-      <!--<template slot="title">我的工作台</template>-->
-      <!--<el-menu-item index="4-1">选项1</el-menu-item>-->
-      <!--<el-menu-item index="4-2">选项2</el-menu-item>-->
-      <!--<el-menu-item index="4-3">选项3</el-menu-item>-->
-      <!--</el-submenu>-->
     </el-menu>
-    
     <el-table v-if="currentIndex ===  '1'"
               :data="webData"
               :default-sort="{prop: 'frequency'}"
               @cell-click="clickEvent"
+              @selection-change="handleselection"
     >
+      <el-table-column
+        v-if="showEdit"
+        type="selection"
+        width="55">
+      </el-table-column>
       <el-table-column
         prop="frequency"
         label="频率"
         width="80"
+        stripe
+        border
         sortable
       >
         <template slot-scope="scope">
@@ -49,7 +50,8 @@
           <el-button
             size="mini"
             @click="handleEdit(scope.$index, scope.row)">{{ scope.row.isStar ? '已收藏' : '收藏'}}
-
+          
+          
           
           
           </el-button>
@@ -57,7 +59,8 @@
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)">{{ scope.row.isForbid ? '已禁用' : '禁用'}}
-
+          
+          
           
           
           </el-button>
@@ -68,6 +71,11 @@
       v-if="currentIndex ===  '2'"
       :data="starData"
     >
+      <el-table-column
+        v-if="showEdit"
+        type="selection"
+        width="55">
+      </el-table-column>
       <el-table-column
         label="频率"
         width="80"
@@ -97,6 +105,9 @@
             size="mini"
             @click="handleEdit(scope.$index, scope.row)">{{ scope.row.isStar ? '已收藏' : '收藏'}}
           
+          
+          
+          
           </el-button>
         </template>
       </el-table-column>
@@ -106,6 +117,11 @@
       v-if="currentIndex ===  '3'"
       :data="forbidData"
     >
+      <el-table-column
+        v-if="showEdit"
+        type="selection"
+        width="55">
+      </el-table-column>
       <el-table-column
         prop="frequency"
         label="频率"
@@ -137,16 +153,23 @@
             type="danger"
             @click="handleDelete(scope.$index, scope.row)">{{ scope.row.isForbid ? '已禁用' : '禁用'}}
           
+          
+          
+          
+          
+          
+          
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <ul>
-    <li>
-    <span class="el-icon-document"><a style="padding: 5px;">操作</a></span>
-    <el-button type="text" size="mini" plain @click="clear">清空记录</el-button>
-    <el-button type="text" size="mini" plain @click="save">保存记录</el-button>
-    </li>
+      <li>
+        <span class="el-icon-document"><a style="padding: 5px;">数据操作</a></span>
+        <el-button type="text" size="mini" @click="goToSecond">新建记录</el-button>
+        <el-button type="text" size="mini" @click="remove">删除记录</el-button>
+        <el-button type="text" size="mini" @click="clear">清空记录</el-button>
+      </li>
     </ul>
   </div>
 </template>
@@ -155,37 +178,37 @@
     data () {
       return {
         currentIndex: '1',
-        webData: []
+        webData: [],
+        showEdit: true,
+        multipleSelection: []
       }
     },
     mounted: function () {
-//        window.localStorage.removeItem('webData');
-      if (window.localStorage.getItem('webData')){
-        console.log(window.localStorage.getItem('webData'));
-          this.webData = JSON.parse(window.localStorage.getItem('webData'));
-      }else{
-          this.webData = [{
-          frequency: 12,
-          title: '知乎',
-          url: 'http://www.zhihu.com',
-          isStar: false,
-          isForbid: false,
-        },
-          {
-            frequency: 15,
-            title: '虎扑',
-            url: 'http://bbs.hupu.com',
-            isStar: false,
-            isForbid: false,
-          },
-          {
-            frequency: 2,
-            title: '百度',
-            url: 'http://www.baidu.com',
-            isStar: false,
-            isForbid: false,
-          }];
-          window.localStorage.setItem('webData',JSON.stringify(this.webData));
+      if (window.localStorage.getItem('webData')) {
+        this.webData = JSON.parse(window.localStorage.getItem('webData'));
+      } else {
+//        this.webData = [{
+//          frequency: 12,
+//          title: '链融云',
+//          url: 'https://www.imfbp.com',
+//          isStar: false,
+//          isForbid: false,
+//        },
+//          {
+//            frequency: 15,
+//            title: 'twitter',
+//            url: 'http://www.twitter.com',
+//            isStar: false,
+//            isForbid: false,
+//          },
+//          {
+//            frequency: 2,
+//            title: '百度',
+//            url: 'http://www.baidu.com',
+//            isStar: false,
+//            isForbid: false,
+//          }];
+//        window.localStorage.setItem('webData', JSON.stringify(this.webData));
       }
     },
     props: {},
@@ -228,9 +251,9 @@
         window.open(url);
       },
       clickEvent: function (row, column, cell, event) {
-        console.log(row,column,cell,event);
-        if(column.label==='网址'){
-            window.open(row.url);
+        console.log(row, column, cell, event);
+        if (column.label === '网址') {
+          window.open(row.url);
         }
       },
       clear: function () {
@@ -238,7 +261,22 @@
         window.localStorage.removeItem('webData');
       },
       save: function () {
-        window.localStorage.setItem('webData',JSON.stringify(this.webData));
+        window.localStorage.setItem('webData', JSON.stringify(this.webData));
+      },
+      goToSecond: function () {
+        this.$router.push('create');
+      },
+      remove: function () {
+        this.webData = this.webData.filter((item) => {
+          return this.multipleSelection.indexOf(item) <= -1;
+        });
+        this.multipleSelection = [];
+        this.save();
+      },
+      handleselection: function (val) {
+        this.multipleSelection = val;
+        console.log(this.multipleSelection);
+        
       }
     }
   }
